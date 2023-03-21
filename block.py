@@ -1,26 +1,31 @@
-import datetime as _dt
-non=100000000
 from hashlib import sha256
+from array import*
 def hex(text):
-    k=sha256(text.encode('ascii')).hexdigest()
+    k=sha256(text.encode("ascii")).hexdigest()
     return k
-def valid(name,lname):
-    text=name+lname
-    isvalid(text)
-  
+class Block:
+    def __init__(self,data,hash,prevhash):
+        self.data=data
+        self.hash=hash
+        self.prevhash=prevhash
 
-
-def isvalid(data):
-    diff=1
-    string ="0"*diff
-    for nonce in range(non):
-        text=data+str(nonce)
-        m=hex(text)
-        if(m.startswith(string)):
-          print(m)
-          
-    
+class Blockchain:
+    def __init__(self):
+        hash=hex("A")
+        prevhash=hex("0")
+        genesis=Block("first",hash,prevhash)
+        self.chain=[genesis]
+    def add(self,data):
+        prevhash=self.chain[-1].hash
+        text=prevhash+data
+        hash=hex(text)
+        block=Block(data,hash,prevhash)
+        self.chain.append(block)
 
 if __name__=="__main__":
-   # print(hex("hello"))
-    valid("rahul","kumar")
+    bc=Blockchain()
+    bc.add("second")
+    bc.add("third")
+    bc.add("four")
+    for block in bc.chain:
+        print(block.__dict__)
